@@ -1,0 +1,205 @@
+# Radio Calico
+
+A live streaming radio web application with real-time metadata display, song ratings, and a clean, responsive interface. Built with Node.js, Express, SQLite, and HLS streaming.
+
+## Features
+
+- **Live HLS Audio Streaming** - High-quality audio streaming with HLS.js
+- **Real-time Metadata** - Displays current song, artist, album, and album artwork
+- **Song Rating System** - Users can rate songs with thumbs up/down (IP-based to prevent duplicates)
+- **Recently Played Tracks** - Shows the last 5 songs played
+- **Responsive Design** - Mobile-friendly interface following Radio Calico brand guidelines
+- **Persistent Storage** - SQLite database for user management and song ratings
+
+## Tech Stack
+
+- **Backend**: Node.js with Express.js
+- **Database**: SQLite (better-sqlite3)
+- **Frontend**: Vanilla JavaScript, HTML5, CSS3
+- **Streaming**: HLS.js for adaptive bitrate streaming
+- **Utilities**: CORS, dotenv
+
+## Project Structure
+
+```
+radiocalico/
+├── server.js                    # Express server and API routes
+├── database/
+│   ├── db.js                   # SQLite database initialization
+│   └── app.db                  # SQLite database file (created on first run)
+├── public/
+│   ├── index.html              # Main HTML markup
+│   ├── styles.css              # All CSS styling
+│   ├── script.js               # Frontend JavaScript (HLS player, ratings)
+│   └── RadioCalicoLogoTM.png   # Brand logo
+├── .env                        # Environment configuration
+├── package.json                # Node.js dependencies
+├── CLAUDE.md                   # Development guide for AI assistants
+└── RadioCalico_Style_Guide.txt # Brand and UI design specifications
+```
+
+## Quick Start
+
+### Install Dependencies
+```bash
+npm install
+```
+
+### Configure Environment
+Create a `.env` file with:
+```
+PORT=3000
+NODE_ENV=development
+DATABASE_PATH=./database/app.db
+```
+
+### Start the Server
+```bash
+npm start
+```
+
+The server will run at: http://localhost:3000
+
+## API Endpoints
+
+### Core Endpoints
+- `GET /` - Main web interface
+- `GET /api/health` - Health check
+
+### User Management
+- `GET /api/users` - Get all users
+- `POST /api/users` - Create a new user
+  ```json
+  {
+    "name": "John Doe",
+    "email": "john@example.com"
+  }
+  ```
+
+### Song Rating System
+- `GET /api/ratings/:songId` - Get rating counts for a song
+  ```json
+  {
+    "songId": "artistname||songtitle",
+    "thumbsUp": 10,
+    "thumbsDown": 2
+  }
+  ```
+
+- `GET /api/ratings/:songId/check` - Check if current user has rated a song
+  ```json
+  {
+    "hasRated": true,
+    "rating": 1
+  }
+  ```
+
+- `POST /api/ratings` - Submit a rating
+  ```json
+  {
+    "songId": "artistname||songtitle",
+    "rating": 1
+  }
+  ```
+  - `rating`: 1 for thumbs up, -1 for thumbs down
+  - Returns 409 if user already rated this song
+
+## Database Schema
+
+### users
+```sql
+CREATE TABLE users (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  name TEXT NOT NULL,
+  email TEXT UNIQUE NOT NULL,
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+)
+```
+
+### song_ratings
+```sql
+CREATE TABLE song_ratings (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  song_id TEXT NOT NULL,
+  user_id TEXT NOT NULL,
+  rating INTEGER NOT NULL CHECK(rating IN (1, -1)),
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  UNIQUE(song_id, user_id)
+)
+```
+
+## Frontend Features
+
+### HLS Audio Player
+- Automatic HLS initialization with fallback for Safari
+- Play/pause controls with visual feedback
+- Volume control with dynamic icon updates
+- Elapsed time display for live stream
+- Error recovery for network and media issues
+
+### Metadata Display
+- Real-time song information (artist, title, album)
+- Dynamic album artwork with cache busting
+- Year badge extracted from album date
+- Updates every 10 seconds from CDN
+
+### Rating System
+- Thumbs up/down buttons
+- Real-time vote counts
+- IP-based duplicate prevention
+- Visual feedback for user's vote
+- Error handling and user messages
+
+### Responsive Design
+- 2-column grid layout on desktop (500px album art + info)
+- Single-column layout on mobile (< 968px)
+- Touch-friendly button sizes (44px minimum)
+- Adaptive typography and spacing
+
+## Brand Guidelines
+
+Radio Calico follows a specific design system:
+
+**Colors:**
+- Mint (#D8F2D5) - backgrounds, accents
+- Forest Green (#1F4E23) - buttons, headings
+- Teal (#38A29D) - navigation, hover states
+- Calico Orange (#EFA63C) - call-to-action elements
+- Charcoal (#231F20) - body text
+- Cream (#F5EADA) - secondary backgrounds
+
+**Typography:**
+- Headings: Montserrat (500-700 weight)
+- Body: Open Sans (400-600 weight)
+
+See `RadioCalico_Style_Guide.txt` for complete design specifications.
+
+## Development
+
+### Adding New Database Tables
+1. Edit `database/db.js`
+2. Add CREATE TABLE statement in `initializeDatabase()`
+3. Restart the server (database auto-initializes)
+4. Add corresponding API routes in `server.js`
+
+### Modifying Frontend
+- **HTML**: Edit `public/index.html`
+- **CSS**: Edit `public/styles.css` (follow brand guidelines)
+- **JavaScript**: Edit `public/script.js`
+
+### IP-Based User Identification
+The rating system uses client IP addresses for anonymous user tracking:
+1. `x-forwarded-for` header (first IP if multiple)
+2. `x-real-ip` header
+3. Socket remote address
+4. Connection remote address
+
+This works correctly behind proxies and load balancers.
+
+## License
+
+ISC
+
+## Repository
+
+https://github.com/VIVEK-JADHAV/radio-calico
