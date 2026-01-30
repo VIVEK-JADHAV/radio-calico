@@ -1,5 +1,9 @@
 # Radio Calico
 
+[![CI/CD Pipeline](https://github.com/VIVEK-JADHAV/radio-calico/actions/workflows/ci.yml/badge.svg)](https://github.com/VIVEK-JADHAV/radio-calico/actions/workflows/ci.yml)
+[![Docker Build](https://github.com/VIVEK-JADHAV/radio-calico/actions/workflows/docker-build.yml/badge.svg)](https://github.com/VIVEK-JADHAV/radio-calico/actions/workflows/docker-build.yml)
+[![License: ISC](https://img.shields.io/badge/License-ISC-blue.svg)](https://opensource.org/licenses/ISC)
+
 A live streaming radio web application with real-time metadata display, song ratings, and a clean, responsive interface. Built with Node.js, Express, SQLite, and HLS streaming.
 
 ## Features
@@ -378,11 +382,28 @@ make test-coverage
 
 ### CI/CD Security Checks
 
-The GitHub Actions workflow automatically:
-- Runs `npm audit` on all pull requests and commits to main
-- Fails builds if high or critical vulnerabilities are found
-- Runs the full test suite before building Docker images
-- Scans Docker images with Trivy for container vulnerabilities
+The GitHub Actions workflows automatically run on every push and pull request:
+
+**Test Job:**
+- Runs all test suites (backend, frontend, integration)
+- Generates code coverage reports
+- Uploads results to Codecov (if configured)
+- Fails on test failures
+
+**Security Job:**
+- Runs `npm audit` on production and all dependencies
+- Checks for moderate, high, and critical vulnerabilities
+- Generates security report summaries
+- Fails on high/critical vulnerabilities in production dependencies
+
+**Build Job:**
+- Only runs after tests and security checks pass
+- Builds multi-platform Docker images (amd64, arm64)
+- Scans images with Trivy for container vulnerabilities
+- Pushes to GitHub Container Registry on main branch
+
+**Status Badges:**
+View workflow status in the badges at the top of this README
 
 ### Security Best Practices
 

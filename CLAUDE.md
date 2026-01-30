@@ -117,6 +117,29 @@ Test suite includes 87+ tests covering:
 - Integration tests for complete user workflows
 - See TESTING.md for detailed documentation
 
+## CI/CD Workflows
+
+GitHub Actions automatically runs on every push and pull request:
+
+### CI Pipeline (`.github/workflows/ci.yml`)
+- **Test Job**: Runs all test suites with coverage reporting
+- **Security Job**: npm audit for vulnerabilities
+- **Lint Job**: Dependency checks
+- **Build Job**: Multi-platform Docker images (after tests pass)
+
+### Workflow Status
+View status badges in README.md or check:
+```bash
+# Actions tab: https://github.com/VIVEK-JADHAV/radio-calico/actions
+```
+
+### Local Testing Before Push
+```bash
+make security        # Run same checks as CI
+make test-coverage   # Generate coverage like CI
+make docker-build    # Test Docker build locally
+```
+
 ## Architecture
 
 ### Application Structure
