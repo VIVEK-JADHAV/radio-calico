@@ -1,7 +1,6 @@
 # Radio Calico
 
 [![CI/CD Pipeline](https://github.com/VIVEK-JADHAV/radio-calico/actions/workflows/ci.yml/badge.svg)](https://github.com/VIVEK-JADHAV/radio-calico/actions/workflows/ci.yml)
-[![Docker Build](https://github.com/VIVEK-JADHAV/radio-calico/actions/workflows/docker-build.yml/badge.svg)](https://github.com/VIVEK-JADHAV/radio-calico/actions/workflows/docker-build.yml)
 [![License: ISC](https://img.shields.io/badge/License-ISC-blue.svg)](https://opensource.org/licenses/ISC)
 
 A live streaming radio web application with real-time metadata display, song ratings, and a clean, responsive interface. Built with Node.js, Express, SQLite, and HLS streaming.

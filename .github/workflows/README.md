@@ -6,7 +6,7 @@ This directory contains automated CI/CD workflows for Radio Calico.
 
 ### CI/CD Pipeline (`ci.yml`)
 
-Comprehensive continuous integration pipeline that runs on every push and pull request.
+The primary and only workflow for continuous integration and deployment. Runs on every push and pull request.
 
 **Jobs:**
 
@@ -50,11 +50,6 @@ Push/PR
   └─▶ lint ────┘
 ```
 
-### Docker Build (`docker-build.yml`)
-
-Legacy workflow for building and pushing Docker images. This workflow is kept for compatibility but most functionality has been moved to `ci.yml`.
-
-**Note**: Consider using `ci.yml` for all CI/CD operations.
 
 ## Setup Instructions
 
