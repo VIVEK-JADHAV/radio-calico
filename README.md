@@ -332,6 +332,66 @@ npm run test:integration
 
 See [TESTING.md](TESTING.md) for detailed testing documentation.
 
+## Security
+
+Radio Calico includes security scanning and auditing tools to ensure the application is free from known vulnerabilities.
+
+### Security Audits
+
+```bash
+# Run full security check (audit + tests)
+npm run security
+
+# Check for known vulnerabilities
+npm audit
+
+# Check production dependencies only
+npm run audit:production
+
+# Attempt to automatically fix vulnerabilities
+npm run audit:fix
+```
+
+### Using Make Targets
+
+A Makefile is provided for common development and security tasks:
+
+```bash
+# Show all available commands
+make help
+
+# Run security audit and tests
+make security
+
+# Run npm audit only
+make audit
+
+# Attempt to fix vulnerabilities
+make audit-fix
+
+# Run all tests
+make test
+
+# Run tests with coverage
+make test-coverage
+```
+
+### CI/CD Security Checks
+
+The GitHub Actions workflow automatically:
+- Runs `npm audit` on all pull requests and commits to main
+- Fails builds if high or critical vulnerabilities are found
+- Runs the full test suite before building Docker images
+- Scans Docker images with Trivy for container vulnerabilities
+
+### Security Best Practices
+
+1. **Regular Updates**: Run `npm audit fix` regularly to patch vulnerabilities
+2. **Production Audits**: Use `npm audit --production` to check runtime dependencies
+3. **Pre-commit Checks**: Run `make security` before committing code
+4. **Monitor CI/CD**: Check GitHub Actions for security alerts
+5. **Review Dependencies**: Audit new dependencies before adding them
+
 ## License
 
 ISC

@@ -36,24 +36,38 @@ radiocalico/
 
 ## Development Commands
 
+### Using Make (Recommended)
+```bash
+make help                # Show all available commands
+make install             # Install dependencies
+make start               # Start the server
+make dev                 # Start in development mode
+make test                # Run all tests
+make test-coverage       # Run tests with coverage
+make security            # Run security audit and tests
+make audit               # Check for vulnerabilities
+```
+
 ### Start the server
 ```bash
-npm start&
+npm start
 # or
 npm run dev
+# or
+make start
 ```
 Server runs at http://localhost:3000
 
 ### Docker Deployment
 ```bash
-# Start with Docker Compose
+# Using Make
+make docker-up           # Start containers
+make docker-down         # Stop containers
+make docker-logs         # View logs
+
+# Using Docker Compose directly
 docker-compose up -d
-
-# Build manually
-docker build -t radiocalico:latest .
-
-# Run manually
-docker run -d -p 3000:3000 -v radiocalico-data:/app/database radiocalico:latest
+docker-compose down
 ```
 Docker container runs at http://localhost:3000
 
@@ -65,12 +79,36 @@ Environment variables are stored in `.env`:
 
 ### Run Tests
 ```bash
+# Using Make
+make test                # Run all tests
+make test-watch          # Watch mode
+make test-coverage       # With coverage report
+make test-backend        # Backend tests only
+make test-frontend       # Frontend tests only
+make test-integration    # Integration tests only
+
+# Using npm
 npm test                 # Run all tests
 npm run test:watch       # Watch mode
 npm run test:coverage    # With coverage report
 npm run test:backend     # Backend tests only
 npm run test:frontend    # Frontend tests only
 npm run test:integration # Integration tests only
+```
+
+### Security Audits
+```bash
+# Using Make
+make security            # Run security audit and tests
+make audit               # Run npm audit
+make audit-fix           # Attempt to fix vulnerabilities
+make audit-production    # Audit production dependencies only
+
+# Using npm
+npm run security         # Run security audit and tests
+npm audit                # Run npm audit
+npm run audit:fix        # Attempt to fix vulnerabilities
+npm run audit:production # Audit production dependencies only
 ```
 
 Test suite includes 87+ tests covering:

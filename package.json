@@ -10,7 +10,11 @@
     "test:coverage": "jest --coverage",
     "test:backend": "jest tests/backend",
     "test:frontend": "jest tests/frontend",
-    "test:integration": "jest tests/integration"
+    "test:integration": "jest tests/integration",
+    "audit": "npm audit",
+    "audit:fix": "npm audit fix",
+    "audit:production": "npm audit --production",
+    "security": "npm audit --production && npm test"
   },
   "keywords": [],
   "author": "",
