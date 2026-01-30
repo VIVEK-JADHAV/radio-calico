@@ -22,6 +22,8 @@ A live streaming radio web application with real-time metadata display, song rat
 - **Streaming**: HLS.js for adaptive bitrate streaming
 - **Utilities**: CORS, dotenv
 
+📊 **[View Complete System Architecture →](ARCHITECTURE.md)**
+
 ## Project Structure
 
 ```
