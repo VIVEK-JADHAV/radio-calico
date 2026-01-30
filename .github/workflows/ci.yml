@@ -163,21 +163,16 @@ jobs:
             type=sha,prefix={{branch}}-
             type=raw,value=latest,enable={{is_default_branch}}
 
-      - name: Build Docker image
-        id: build
+      - name: Build Docker image for scanning
         uses: docker/build-push-action@v5
         with:
           context: .
-          push: ${{ github.event_name != 'pull_request' }}
-          load: ${{ github.event_name == 'pull_request' }}
-          tags: ${{ github.event_name == 'pull_request' && 'radiocalico:scan' || steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}
+          load: true
+          tags: radiocalico:scan
           cache-from: type=gha
-          cache-to: type=gha,mode=max
-          platforms: ${{ github.event_name == 'pull_request' && 'linux/amd64' || 'linux/amd64,linux/arm64' }}
+          platforms: linux/amd64
 
       - name: Run Trivy vulnerability scanner
-        if: github.event_name == 'pull_request'
         uses: aquasecurity/trivy-action@master
         with:
           image-ref: 'radiocalico:scan'
@@ -187,10 +182,23 @@ jobs:
           timeout: '10m'
 
       - name: Upload Trivy results to GitHub Security
-        if: github.event_name == 'pull_request'
+        if: always()
         uses: github/codeql-action/upload-sarif@v3
         with:
           sarif_file: 'trivy-results.sarif'
+
+      - name: Build and push multi-platform image
+        if: github.event_name != 'pull_request'
+        id: build
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+          platforms: linux/amd64,linux/arm64
 
       - name: Generate build summary
         if: always()
