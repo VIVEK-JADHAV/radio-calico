@@ -164,6 +164,7 @@ jobs:
             type=raw,value=latest,enable={{is_default_branch}}
 
       - name: Build and push Docker image
+        id: build
         uses: docker/build-push-action@v5
         with:
           context: .
@@ -174,14 +175,33 @@ jobs:
           cache-to: type=gha,mode=max
           platforms: linux/amd64,linux/arm64
 
+      - name: Determine image tag for scanning
+        if: github.event_name != 'pull_request'
+        id: scan-tag
+        run: |
+          if [ "${{ github.ref_name }}" == "main" ]; then
+            echo "tag=ghcr.io/${{ github.repository }}:main" >> $GITHUB_OUTPUT
+          elif [[ "${{ github.ref }}" == refs/tags/* ]]; then
+            echo "tag=ghcr.io/${{ github.repository }}:${{ github.ref_name }}" >> $GITHUB_OUTPUT
+          else
+            echo "tag=ghcr.io/${{ github.repository }}:${{ github.ref_name }}" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Wait for image to be available
+        if: github.event_name != 'pull_request'
+        run: |
+          echo "Waiting for image to be available in registry..."
+          sleep 5
+
       - name: Run Trivy vulnerability scanner
         if: github.event_name != 'pull_request'
         uses: aquasecurity/trivy-action@master
         with:
-          image-ref: ghcr.io/${{ github.repository }}:${{ steps.meta.outputs.version }}
+          image-ref: ${{ steps.scan-tag.outputs.tag }}
           format: 'sarif'
           output: 'trivy-results.sarif'
           severity: 'CRITICAL,HIGH'
+          timeout: '10m'
 
       - name: Upload Trivy results to GitHub Security
         if: github.event_name != 'pull_request'
