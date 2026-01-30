@@ -196,6 +196,34 @@ The rating system uses client IP addresses for anonymous user tracking:
 
 This works correctly behind proxies and load balancers.
 
+## Testing
+
+Radio Calico includes a comprehensive test suite with 87+ tests covering backend, frontend, and integration scenarios.
+
+### Run Tests
+```bash
+# All tests
+npm test
+
+# Watch mode
+npm run test:watch
+
+# With coverage report
+npm run test:coverage
+
+# Specific test suites
+npm run test:backend
+npm run test:frontend
+npm run test:integration
+```
+
+### Test Coverage
+- **Backend**: API endpoints, database constraints, rating logic, IP detection
+- **Frontend**: Utility functions, metadata parsing, quality formatting
+- **Integration**: Complete user workflows and rating flows
+
+See [TESTING.md](TESTING.md) for detailed testing documentation.
+
 ## License
 
 ISC

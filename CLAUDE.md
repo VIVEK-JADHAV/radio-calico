@@ -19,8 +19,14 @@ radiocalico/
 │   ├── styles.css              # All CSS styling
 │   ├── script.js               # Frontend JavaScript (HLS player, ratings)
 │   └── RadioCalicoLogoTM.png   # Brand logo
+├── tests/                      # Test suite (87+ tests)
+│   ├── backend/                # Backend API and database tests
+│   ├── frontend/               # Frontend utility and parsing tests
+│   └── integration/            # End-to-end workflow tests
 ├── .env                        # Environment configuration
 ├── package.json                # Node.js dependencies
+├── jest.config.js              # Jest test configuration
+├── TESTING.md                  # Testing documentation
 └── RadioCalico_Style_Guide.txt # Brand and UI design specifications
 ```
 
@@ -39,6 +45,22 @@ Environment variables are stored in `.env`:
 - `PORT` - Server port (default: 3000)
 - `NODE_ENV` - Environment mode
 - `DATABASE_PATH` - SQLite database file path (default: ./database/app.db)
+
+### Run Tests
+```bash
+npm test                 # Run all tests
+npm run test:watch       # Watch mode
+npm run test:coverage    # With coverage report
+npm run test:backend     # Backend tests only
+npm run test:frontend    # Frontend tests only
+npm run test:integration # Integration tests only
+```
+
+Test suite includes 87+ tests covering:
+- Backend API endpoints and database operations
+- Frontend utility functions and metadata parsing
+- Integration tests for complete user workflows
+- See TESTING.md for detailed documentation
 
 ## Architecture
 

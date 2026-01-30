@@ -94,7 +94,7 @@ app.post('/api/ratings', (req, res) => {
     const { songId, rating } = req.body;
     const clientIp = getClientIp(req);
 
-    if (!songId || !rating) {
+    if (!songId || rating === undefined || rating === null) {
       return res.status(400).json({ error: 'Missing required fields: songId, rating' });
     }
 
