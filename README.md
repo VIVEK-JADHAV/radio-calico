@@ -60,6 +60,114 @@ npm start
 
 The server will run at: http://localhost:3000
 
+## Docker Deployment
+
+Radio Calico can be deployed in a self-contained Docker container for production environments.
+
+### Prerequisites
+- Docker 20.10+ and Docker Compose 2.0+
+- 100MB disk space for image and database
+
+### Quick Start with Docker Compose
+
+```bash
+# Build and start the container
+docker-compose up -d
+
+# View logs
+docker-compose logs -f
+
+# Stop the container
+docker-compose down
+
+# Stop and remove database volume
+docker-compose down -v
+```
+
+The application will be available at http://localhost:3000
+
+### Build Docker Image Manually
+
+```bash
+# Build the image
+docker build -t radiocalico:latest .
+
+# Run the container
+docker run -d \
+  --name radiocalico \
+  -p 3000:3000 \
+  -v radiocalico-data:/app/database \
+  -e NODE_ENV=production \
+  radiocalico:latest
+
+# View logs
+docker logs -f radiocalico
+
+# Stop and remove container
+docker stop radiocalico && docker rm radiocalico
+```
+
+### Docker Features
+
+- **Multi-stage Build** - Optimized image size (~150MB)
+- **Non-root User** - Runs as `node` user for security
+- **Health Checks** - Built-in health monitoring using `/api/health`
+- **Persistent Storage** - SQLite database stored in Docker volume
+- **Signal Handling** - Proper shutdown with dumb-init
+- **Alpine Linux** - Minimal attack surface
+
+### Environment Variables
+
+Configure via `docker-compose.yml` or `-e` flags:
+
+```yaml
+environment:
+  - PORT=3000
+  - NODE_ENV=production
+  - DATABASE_PATH=/app/database/app.db
+```
+
+### Database Persistence
+
+The SQLite database is stored in a Docker volume (`radiocalico-data`). To backup:
+
+```bash
+# Backup database
+docker run --rm \
+  -v radiocalico-data:/data \
+  -v $(pwd):/backup \
+  alpine cp /data/app.db /backup/app.db.backup
+
+# Restore database
+docker run --rm \
+  -v radiocalico-data:/data \
+  -v $(pwd):/backup \
+  alpine cp /backup/app.db.backup /data/app.db
+```
+
+### Production Deployment
+
+For production deployments:
+
+1. **Use a Reverse Proxy** (nginx/Caddy) for HTTPS
+2. **Set Resource Limits** in docker-compose.yml:
+   ```yaml
+   deploy:
+     resources:
+       limits:
+         cpus: '1'
+         memory: 512M
+   ```
+3. **Enable Logging** with a log driver:
+   ```yaml
+   logging:
+     driver: "json-file"
+     options:
+       max-size: "10m"
+       max-file: "3"
+   ```
+4. **Monitor Health** using the built-in health check endpoint
+
 ## API Endpoints
 
 ### Core Endpoints

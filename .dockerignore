@@ -1,0 +1,43 @@
+# Node modules
+node_modules/
+npm-debug.log
+yarn-error.log
+
+# Environment files
+.env
+
+# Git
+.git/
+.gitignore
+.claude/
+
+# Tests and coverage
+tests/
+coverage/
+jest.config.js
+TEST_IMPLEMENTATION_SUMMARY.md
+TESTING.md
+
+# Development files
+*.md
+!README.md
+*.log
+
+# Database (will be created at runtime)
+database/*.db
+database/*.db-shm
+database/*.db-wal
+
+# Documentation and assets not needed in container
+RadioCalicoLayout.png
+RadioCalicoStyle.zip
+RadioCalico_Style_Guide.txt
+stream_URL.txt
+
+# IDE and OS files
+.vscode/
+.idea/
+.DS_Store
+*.swp
+*.swo
+*~

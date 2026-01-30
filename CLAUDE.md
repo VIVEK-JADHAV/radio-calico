@@ -23,7 +23,11 @@ radiocalico/
 │   ├── backend/                # Backend API and database tests
 │   ├── frontend/               # Frontend utility and parsing tests
 │   └── integration/            # End-to-end workflow tests
-├── .env                        # Environment configuration
+├── Dockerfile                  # Docker container definition
+├── docker-compose.yml          # Docker Compose configuration
+├── .dockerignore               # Docker build exclusions
+├── .env                        # Environment configuration (local)
+├── .env.example                # Environment template
 ├── package.json                # Node.js dependencies
 ├── jest.config.js              # Jest test configuration
 ├── TESTING.md                  # Testing documentation
@@ -39,6 +43,19 @@ npm start&
 npm run dev
 ```
 Server runs at http://localhost:3000
+
+### Docker Deployment
+```bash
+# Start with Docker Compose
+docker-compose up -d
+
+# Build manually
+docker build -t radiocalico:latest .
+
+# Run manually
+docker run -d -p 3000:3000 -v radiocalico-data:/app/database radiocalico:latest
+```
+Docker container runs at http://localhost:3000
 
 ### Configuration
 Environment variables are stored in `.env`:
